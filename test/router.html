@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>练习路由</title>
+    <style>
+     .router-link-active {
+        color: red;
+      }
+    </style>
+</head>
+<body>
+    <!-- 创建跟元素 -->
+    <div id="app">
+         <h1>Hello World</h1>
+         <div class="content">
+             <!-- router-link 组件导航， 会被渲染成一个a标签 -->
+             <router-link to="/foo"> Go to Foo</router-link>
+             <router-link to="/bar"> Go to Bar</router-link>
+         </div>
+         <router-view></router-view>
+    </div>
+</body>
+<script src="https://unpkg.com/vue/dist/vue.js"></script>
+<script src="https://unpkg.com/vue-router/dist/vue-router.js"></script>
+<script type="text/javascript">
+    // 创建foo 和 bar 组件
+    const Foo = {template: '<div>foo</div>'};
+    const Bar = {
+        template: '<div>bar</div>',
+        beforeRouteEnter(to, from, next) {
+            // 组件未挂载前获取...不能获取this 但是next(vm => {}), vm 可以访问组件实例
+          console.log('这是组件路由守卫 beforeRouteEnter');
+          next();
+        },
+        beforeRouteUpdate(to, from, next) {
+            // 当前路由改变， 但是该组件被复用时调用
+            console.log('这是组件路由守卫 beforeRouteUpdate');
+            next();
+        },
+        beforeRouteLeave(to, from, next) {
+            // 当离开当前组件时被调用
+            console.log('这是组件路由守卫 beforeRouteLeave');
+            next();
+        }
+    };
+
+    // 路由配置对象， 是和组件关联映射
+    const routes = [
+        { 
+            path: '/foo', 
+            component: Foo,
+            beforeEnter(to, from, next){
+               console.log('这是路由守卫');
+               next();
+            }
+        },
+        { path: '/bar', component: Bar}
+    ];
+
+    // 创建路由实例 router 
+    const router = new VueRouter({
+      routes,
+    });
+
+    router.beforeEach((to, from, next) => {
+        console.log('全局前置守卫', to , from,)
+         next();
+    })
+    router.afterEach((to, from, next) => {
+        console.log('这是全局后置守卫')
+    })
+
+    // 创建vue实例， 并挂在到根元素上
+    const app = new Vue({
+        router,
+    }).$mount("#app");
+</script>
+</html>
