@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>文件上传</title>
+    <script src="https://code.jquery.com/jquery-3.4.1.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/spark-md5/3.0.0/spark-md5.js"></script>
+    <script src="http://cdn.bootcss.com/blueimp-md5/2.10.0/js/md5.min.js"></script>
+</head>
+<body>
+  <h1>大文件上传测试</h1>
+  <div>
+    <h3>自定义上传文件</h3>
+    <input id="file" type="file" name="avatar"/>
+    <div>
+      <input id="submitBtn" type="button" value="提交">
+    </div>
+  </div>
+  <script type="text/javascript">
+    $(function() {
+      const submitBtn = $('#submitBtn');
+      submitBtn.on('click', async () => {
+        var fileDom = $('#file')[0]; 
+        // 获取到的files为一个File对象数组，如果允许多选的时候，文件为多个
+        const files = fileDom.files;
+        const file = files[0]; // 获取第一个文件，因为文件是一个数组
+        console.log(md5(file), '这是加密文件， 作为唯一标识符');
+        if (!file) {
+          alert('没有获取文件');
+          return;
+        }
+        var fileSize = file.size; // 文件大小
+        var chunkSize = 2 * 1024 * 1024; // 切片的大小
+        var chunks = Math.ceil(fileSize / chunkSize); // 获取切片的个数
+        var blobSlice = File.prototype.slice || File.prototype.mozSlice || File.prototype.webkitSlice;
+        var spark = new SparkMD5.ArrayBuffer();
+        var reader = new FileReader();
+        var currentChunk = 0;
+
+        reader.onload = function(e) {
+          const result = e.target.result;
+          spark.append(result);
+          currentChunk++;
+          if (currentChunk < chunks) {
+            loadNext();
+            console.log(`第${currentChunk}分片解析完成，开始解析${currentChunk + 1}分片`);
+          } else {
+            const md5 = spark.end();
+            console.log('解析完成');
+            console.log(md5);
+          }
+        };
+        function loadNext() {
+          var start = currentChunk * chunkSize;
+          var end = start + chunkSize > file.size ? file.size : (start + chunkSize);
+          reader.readAsArrayBuffer(blobSlice.call(file, start, end));
+        };
+        loadNext();
+      });
+    });
+  </script>
+</body>
+</html>
