@@ -151,5 +151,5 @@ const obj4 = deepCopy(obj3);
 console.log(obj4);
 console.log(JSON.parse(JSON.stringify(obj3)));
 ```
-![deepCopyTest](./image/deepCopyTest.png, "deepCOpy")
+![deepCopyTest](./image/deepCopyTest.png "deepCOpy")
 ***
