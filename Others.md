@@ -65,5 +65,91 @@
 ***
 # vue 不能检测到数组和对象的变化，
 ***
-  ## 
+  ## 对于对象
+  1. 无法检测对象属性的添加和移除， 由于vue 只会在初始实例化时对属性添加getter/setter的转化，实例化之后对象的添加或者删除属性， 不能引起响应式
+   2. 解决方法是Vue.set(object, propertyName, value) 或者是this.$set(object, propertyName, value);
+   3. 有时候肯能会同时写入多个属性， this.someObject = Object.assign({}, this.someObject, {a: 1, b: 2});
+   ## 对于数组
+   1. 不能检测到利用索引直接设置一个数组时，如arr[1] = 'a'
+   2. 修改数组的长度时， 如： arr.length = 7;
+   3. 解决方法Vue.set(arr, indexOfItem, newValue)或者是 this.$set(arr, indexOfItem, value);
+   4. 解决修改数组长度时， arr.splice(newLength);
+***
+# js中六种假值
+***
+   1. 假值定义， 有一个变量foo, if(!foo) 都是true, 则foo都是假值。
+   2. 假值有 '', NaN, undefined, null, false, 0,
+***
+# 实现深拷贝的方法
+***
+1. 数组的组合方法
+```
+var arr = [];
+var arr1 = [].concat(arr); // 仅对不包含引用类型的以为数据的深拷贝
+```
+2. slice 截取
+```
+var arr = [];
+var arr1 = arr.slice(); // 仅对不包含引用类型的以为数据的深拷贝
+```
+3. for 循环
+```
+var arr = [];
+var arr1 = [];
+for(var i = 0; i < arr.length; i++) {
+  arr1.push(arr[i]);
+}
+```
+4. 类型转换
+```
+var arr = [];
+var arr1 = JSON.parse(JSON.stringfy(arr)) // 如果内部有函数， 则会忽略
+```
+5. es6 扩展运算符
+```
+var arr = [];
+var arr1 = [...arr]
+```
+6. loadsh 库的_.cloneDeep()
+7. 实现深拷贝
+```
+function deepCopy(obj) {
+  let newObj = Array.isArray(obj)? [] : {}; // 判断是一个数组还是一个对象
+  // 遍历传进来的参数对象
+  if (Array.isArray(obj)) {
+    obj.forEach((item, index) => {
+      if(typeof item === 'object') {
+        newObj =  newObj.concat(deepCopy(item));
+      } else {
+        newObj.push(item);
+      }
+    })
+  } else {
+    for (key in obj) {
+      if (typeof obj[key] === 'object') {
+        newObj[key] = deepCopy(obj[key]);
+      } else {
+        newObj[key] = obj[key];
+      }
+    }
+  }
+  return newObj;
+}
+
+const obj = [1,2,{a:1, b:{c:2}}];
+const obj2 = deepCopy(obj);
+obj2[2].a = 100;
+console.log(obj);
+console.log(obj2);
+console.log(JSON.parse(JSON.stringify(obj)));
+
+const obj3 = {
+  a:1,
+  b:[1,2,3,{c:4, b:{g:7, f:[9,{g:10}]}}]
+}
+const obj4 = deepCopy(obj3);
+console.log(obj4);
+console.log(JSON.parse(JSON.stringify(obj3)));
+```
+![deepCopyTest](/image/deepCopyTest.png, "deepCOpy")
 ***
