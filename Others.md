@@ -153,3 +153,16 @@ console.log(JSON.parse(JSON.stringify(obj3)));
 ```
 ![deepCopyTest](./image/deepCopyTest.png "deepCOpy")
 ***
+# 函数柯里化
+***
+ 就是把接受多个参数的函数转化成一系列接受一个参数的技术
+ ```
+  function add(a,b,c) {
+    return a+b+c;
+  }
+  add(1,2,3);
+  <!-- 转换成下面的调用形式 -->
+  add(1)(2)(3);
+ ```
+ ![函数柯里化](./image/currying.png "currying")
+***

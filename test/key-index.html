@@ -5,14 +5,37 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
-</head>
-<body>
     <script>
+        function draw() {
+            function Person(name){
+              this.name = name
+            }
+            Person.prototype.sayHi = function(){
+                console.log('你好，我是'+this.name)
+            }//这个方法是拿出来特地说明与class继承的不同
+
+            function Child(name,age){
+              console.log(this);
+              Person.call(this,name);
+              console.log(this, "后来的")
+              this.age = age
+            }
+
+            let xw = new Child('小王',10)
+            console.log(xw.name); //小王
+            console.log(xw.age);
+            // xw.sayHi() //报错        
+        }
+    </script>
+</head>
+<body onload="draw()">
+    2222222222222
+    <!-- <script>
         console.trace();
         const a = 1;
         let b = 2;
         var c = 3;
         debugger;
-    </script>
+    </script> -->
 </body>
 </html>
