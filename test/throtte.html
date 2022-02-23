@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>节流</title>
+</head>
+<body>
+    <p>不会重新计时，在规定的时间内，节流就是只有第一次点击才是有效的，后面点击的都是无效的，只执行一次</p>
+    <button style="color: gold" onclick="throtte('feli')">请点击，测试节流</button>
+    <input type="text" id="input">
+    <script>
+
+        function show(agru) {
+            console.log(`节流：我是节流，我输出了${agru}`)
+        }
+        let timer;
+        function throtte(agru) {
+           let isHasClick = true
+           console.log(222);
+           if(timer) {
+               return;
+           }
+           timer = setTimeout(() => {
+               show(agru);
+               timer = null;
+           }, 2000)
+        }
+
+
+        // 节流
+        const input = document.getElementById('input');
+        input.addEventListener('input', throtte2(show));
+
+        function throtte2(fn) {
+           let timer;
+           return function(...argus) {
+               if(timer) {
+                  return;
+               }
+               timer = setTimeout(() => {
+                   show2(argus[0]);
+                   timer = null;
+               },1000)
+           };
+        };
+
+        function show2(e) {
+           console.log(e.target.value, 999);
+        }
+    </script>
+</body>
+</html>
