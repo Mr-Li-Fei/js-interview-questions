@@ -11,7 +11,7 @@
 # 组件响应路由动态参数的变化
 ***
   1. 通过watch 监听 $route
-  2. beforeRouteLeave 
+  2. beforeRouteUpdate
 ***
 # 路由传参
 ***
@@ -27,7 +27,7 @@
 
      <router-view to="/app/feli">
      <router-view :to="{path: '/app/feli'}">
-     <router-view :to="{name: 'component', params:{id:feli}}">
+     <router-view :to="{name: 'component', params:{id:feli}}">  
 
      this.$route.push('/app/feli');
      this.$route.push({path:'/app/feli'});

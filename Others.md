@@ -166,3 +166,9 @@ console.log(JSON.parse(JSON.stringify(obj3)));
  ```
  ![函数柯里化](./image/currying.png "currying")
 ***
+# 前端加密算法
+***
+ 1. 对称加密: 代表（AES）就是加密和解密的密钥是一样的，库————crypto-js.aes
+ 2. 非对称加密 代表（RSA）就是拥有一个密钥对（公钥和私钥）， 公钥用来加密， 私钥用来解密，库————jsencrypt
+ 3. HASH加密， 代表（md5）就是通过固定散列算法，生成一段不可逆的字符串  库———— js-md5
+***
